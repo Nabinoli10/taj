@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Taj Palace</title>
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+        .success {
+            border: 1px solid green;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: lightblue;
+    }
+        button {
+            background-color: green;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+    <h1>Welcome to Taj Palace</h1>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name">
+
+    <label for="phone">Phone number:</label>
+    <input type="text" id="phone" name="phone">
+
+    
+    <p>Select a time:</p>
+    <div class="option-set">
+        <input type="radio" name="time" value="05:00" >05:00
+        <input type="radio" name="time" value="06:00"  >06:00
+    </div>
+    <div class="option-set">
+        <input type="radio" name="time" value="07:00"  >07:00
+        <input type="radio" name="time" value="08:00"  >08:00
+    </div>
+
+    <p>What would you like to have with us?</p>
+    <div class="option-set">
+        <input type="checkbox" name="items" value="Starters" >Starters
+        <input type="checkbox" name="items" value="Main Course"  >Main Course
+    </div>
+    <div class="option-set">
+        <input type="checkbox" name="items" value="Desserts"  >Desserts
+        <input type="checkbox" name="items" value="Drinks"  >Drinks
+    </div>
+    <button onclick="checkReservation()">Submit</button>
+
+    <p id="reservation"></p>
+
+    <script>
+        function validateName() {
+            var x = document.querySelector('input[name="name"]');
+            if (x.value.trim() === "") {
+                x.classList.remove("success");
+                x.classList.add("error");
+                document.getElementById("reservation").innerHTML = "Error: Name is empty";
+                return false;
+            }
+            var parts = x.value.split(' ');
+            if (parts.length < 2) {
+                x.classList.remove("success");
+                x.classList.add("error");
+                document.getElementById("reservation").innerHTML = "Error: First and last names are required";
+                return false;
+            }
+            x.classList.remove("error");
+            x.classList.add("success");
+            return true;
+        }
+    
+        function validatePhone() {
+            var x = document.querySelector('input[name="phone"]');
+            if (x.value.trim() === "") {
+                x.classList.add("error");
+                document.getElementById("reservation").innerHTML = "Error: Phone number is empty";
+                return false;
+            }
+            if (!/^[0-9]/.test(x.value)) {
+                x.classList.add("error");
+                document.getElementById("reservation").innerHTML = "Error: Phone number must start with numbers";
+                return false;
+            }
+            x.classList.remove("error");
+            return true;
+        }
+    
+        function checkReservation() {
+            var isNameValid = validateName();
+            var isPhoneValid = validatePhone();
+            if (!isNameValid || !isPhoneValid) {
+                return;
+            }
+    
+            var name = document.querySelector('input[name="name"]').value;
+            var timeRadioButtons = document.querySelectorAll('input[name="time"]:checked');
+            if (timeRadioButtons.length === 0) {
+                document.getElementById("reservation").innerHTML = "Error: Please select a time.";
+                return;
+            }
+            var time = timeRadioButtons[0].value;
+    
+            var itemsCheckboxes = document.querySelectorAll('input[name="items"]:checked');
+            if (itemsCheckboxes.length === 0) {
+                document.getElementById("reservation").innerHTML = "Error: Please select at least one item.";
+                return;
+            }
+            var items = Array.from(itemsCheckboxes).map(function(el) { return el.value; });
+    
+            document.getElementById("reservation").innerHTML = "Hi " + name + ", your reservation at " + time + " for " + items.join(", ") + " has been confirmed!";
+        }
+    </script>
+    
+
